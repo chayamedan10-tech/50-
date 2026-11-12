@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fbf7f0">
+  <title>מסע אל החופה | 50 ימים של אהבה</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --cream: #fbf7f0;
+      --paper: #fffdf9;
+      --ink: #493b3b;
+      --muted: #8d7e78;
+      --rose: #bd7880;
+      --rose-dark: #985b65;
+      --gold: #c59c5b;
+      --gold-light: #eee1c6;
+      --blue: #a9bfca;
+      --line: #eadfd4;
+      --shadow: 0 16px 45px rgb(87 57 48 / 9%);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 9% 12%, rgb(228 211 183 / 23%), transparent 25rem),
+        radial-gradient(ellipse at 92% 38%, rgb(214 184 187 / 20%), transparent 27rem),
+        var(--cream);
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+
+    .page {
+      width: min(1120px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 38px 0 56px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(30px, 6vw, 64px) 24px;
+      border: 1px solid rgb(197 156 91 / 32%);
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgb(255 253 249 / 97%), rgb(250 239 232 / 91%));
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .hero::before, .hero::after {
+      position: absolute;
+      color: rgb(197 156 91 / 35%);
+      font-size: clamp(34px, 7vw, 70px);
+      content: "✦";
+    }
+
+    .hero::before { top: 20px; right: 7%; }
+    .hero::after { bottom: 17px; left: 8%; font-size: 40px; }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--rose-dark);
+      font-size: .9rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    h1 {
+      margin: 0;
+      color: #72514d;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 7vw, 4.3rem);
+      font-weight: 500;
+    }
+
+    .subtitle {
+      max-width: 620px;
+      margin: 15px auto 0;
+      color: #766763;
+      font-size: clamp(1rem, 2.4vw, 1.18rem);
+      line-height: 1.8;
+    }
+
+    .counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 21px;
+      padding: 9px 16px;
+      border: 1px solid var(--gold-light);
+      border-radius: 999px;
+      background: rgb(255 255 255 / 68%);
+      color: #72514d;
+      font-weight: 700;
+    }
+
+    .counter strong { color: var(--rose-dark); font-size: 1.15rem; }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 28px 4px 11px;
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 9px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: #eadfd7;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--rose), var(--gold));
+      transition: width .45s ease;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 31px 2px 15px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      color: #72514d;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.35rem, 4vw, 1.8rem);
+      font-weight: 500;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .door-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .door {
+      position: relative;
+      min-height: 100px;
+      padding: 14px 8px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: var(--paper);
+      box-shadow: 0 5px 16px rgb(87 57 48 / 4%);
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .door:not(:disabled):hover, .door:not(:disabled):focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--gold);
+      box-shadow: 0 9px 22px rgb(87 57 48 / 11%);
+      outline: none;
+    }
+
+    .door.available {
+      border-color: #dfc79c;
+      background: linear-gradient(145deg, #fffefa, #fbf4e8);
+    }
+
+    .door.completed {
+      border-color: #d3b3b3;
+      background: linear-gradient(145deg, #fffdfc, #f8eded);
+    }
+
+    .door:disabled {
+      color: #a99f99;
+      background: #f2eee9;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .door-number {
+      display: block;
+      color: #72514d;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.65rem;
+      line-height: 1;
+    }
+
+    .door:disabled .door-number { color: #a99f99; }
+
+    .door-label {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .76rem;
+    }
+
+    .door-mark {
+      position: absolute;
+      top: 8px;
+      left: 9px;
+      font-size: .9rem;
+    }
+
+    .door.available .door-mark { color: var(--gold); }
+    .door.completed .door-mark { color: var(--rose-dark); }
+
+    .footer-note {
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .reset-button {
+      display: block;
+      margin: 16px auto 0;
+      padding: 7px 12px;
+      border: 0;
+      background: transparent;
+      color: #897a74;
+      font-size: .82rem;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+    }
+
+    .notice {
+      margin: 16px 0 0;
+      padding: 12px 15px;
+      border: 1px solid #d9a8a8;
+      border-radius: 12px;
+      background: #fff0ef;
+      color: #793f43;
+      line-height: 1.6;
+    }
+
+    .notice[hidden] { display: none; }
+
+    dialog {
+      width: min(520px, calc(100% - 28px));
+      max-width: none;
+      max-height: min(88vh, 760px);
+      padding: 0;
+      overflow: auto;
+      border: 1px solid rgb(197 156 91 / 42%);
+      border-radius: 23px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: 0 24px 80px rgb(48 32 28 / 26%);
+    }
+
+    dialog::backdrop {
+      background: rgb(55 42 39 / 48%);
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-content { padding: clamp(22px, 5vw, 34px); }
+
+    .modal-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .day-kicker {
+      margin: 0 0 5px;
+      color: var(--rose-dark);
+      font-weight: 700;
+    }
+
+    .modal-title {
+      margin: 0;
+      color: #72514d;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.75rem;
+      font-weight: 500;
+    }
+
+    .close-button {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: #fff;
+      color: var(--muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .challenge-box {
+      margin-top: 22px;
+      padding: 18px;
+      border-right: 3px solid var(--gold);
+      border-radius: 12px 5px 5px 12px;
+      background: #faf4e9;
+      font-size: 1.08rem;
+      line-height: 1.75;
+    }
+
+    .answer-form { margin-top: 18px; }
+
+    .answer-form label {
+      display: block;
+      margin-bottom: 8px;
+      color: #6b5b56;
+      font-weight: 700;
+    }
+
+    .answer-form input {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 13px;
+      border: 1px solid #d9ccc1;
+      border-radius: 11px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .answer-form input:focus {
+      border-color: var(--rose);
+      outline: 3px solid rgb(189 120 128 / 16%);
+    }
+
+    .answer-error {
+      min-height: 1.5em;
+      margin: 7px 0 0;
+      color: #a13e48;
+      font-size: .9rem;
+    }
+
+    .primary-button {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 11px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--rose);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s ease, transform .18s ease;
+    }
+
+    .primary-button:hover { transform: translateY(-1px); background: var(--rose-dark); }
+    .primary-button:focus-visible, .close-button:focus-visible, .reset-button:focus-visible {
+      outline: 3px solid rgb(189 120 128 / 40%);
+      outline-offset: 3px;
+    }
+
+    .surprise {
+      margin-top: 19px;
+      padding: 18px;
+      border: 1px solid #ead8b8;
+      border-radius: 14px;
+      background: linear-gradient(145deg, #fff9eb, #fff6f5);
+      animation: reveal .35s ease both;
+    }
+
+    .surprise[hidden], .answer-form[hidden] { display: none; }
+
+    .surprise h3 {
+      margin: 0 0 8px;
+      color: #926b35;
+      font-size: 1.12rem;
+    }
+
+    .surprise p { margin: 0; line-height: 1.75; }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (min-width: 720px) {
+      .door-grid { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 13px; }
+      .door { min-height: 112px; }
+    }
+
+    @media (max-width: 430px) {
+      .page { width: min(100% - 22px, 1120px); padding-top: 18px; }
+      .hero { border-radius: 20px; }
+      .door-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+      .door { min-height: 88px; border-radius: 14px; }
+      .door-number { font-size: 1.45rem; }
+      .section-heading { align-items: flex-start; flex-direction: column; gap: 5px; }
+      .progress-wrap { gap: 9px; font-size: .82rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">מתנה קטנה, 50 רגעים גדולים</p>
+      <h1>מסע אל החופה</h1>
+      <p class="subtitle">אחות אהובה, בעוד 50 יום תצעדי אל החופה! עד אז מחכה לך בכל דלת חידה קטנה וברכה גדולה — כי התרגשות בלי קצת משחק פשוט לא נחשבת.</p>
+      <div class="counter" aria-label="ספירה לאחור">
+        <span>כל יום עוד צעד אל החופה</span>
+        <strong>♡</strong>
+      </div>
+    </header>
+
+    <div id="storageNotice" class="notice" role="alert" hidden></div>
+
+    <section aria-labelledby="progressTitle">
+      <div class="progress-wrap">
+        <span id="progressTitle">כמה דלתות נפתחו?</span>
+        <div class="progress-track" role="progressbar" aria-label="התקדמות המשחק" aria-valuemin="0" aria-valuemax="50" aria-valuenow="0">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <strong id="progressText">0 מתוך 50</strong>
+      </div>
+    </section>
+
+    <section aria-labelledby="doorsTitle">
+      <div class="section-heading">
+        <h2 id="doorsTitle">50 דלתות, 50 הפתעות</h2>
+        <p>מתחילים מיום 50 וצועדים עד ליום הגדול ✨</p>
+      </div>
+      <div class="door-grid" id="doorGrid" aria-label="דלתות הימים"></div>
+    </section>
+
+    <p class="footer-note">הדלת הראשונה פתוחה כבר עכשיו. בכל יום נפתחת עוד דלת — בקצב שמתאים למסע, לא בקצב של הדודה ששואלת מתי החתונה.</p>
+    <button class="reset-button" id="resetProgress" type="button">להתחיל מחדש ולאפס את ההתקדמות</button>
+  </main>
+
+  <dialog id="dayDialog" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <div class="modal-top">
+        <div>
+          <p class="day-kicker" id="dayKicker"></p>
+          <h2 class="modal-title" id="modalTitle"></h2>
+        </div>
+        <button class="close-button" id="closeDialog" type="button" aria-label="סגירה">×</button>
+      </div>
+      <div class="challenge-box" id="challengeText"></div>
+      <form class="answer-form" id="answerForm">
+        <label for="answerInput">מה התשובה שלך?</label>
+        <input id="answerInput" name="answer" type="text" autocomplete="off" required>
+        <p class="answer-error" id="answerError" role="status" aria-live="polite"></p>
+        <button class="primary-button" type="submit">לפתוח את ההפתעה</button>
+      </form>
+      <section class="surprise" id="surprise" aria-live="polite" hidden>
+        <h3>פתחת את הדלת! הנה ההפתעה שלך ♡</h3>
+        <p id="surpriseText"></p>
+      </section>
+    </div>
+  </dialog>
+
+  <script>
+    "use strict";
+
+    const days = [
+      { day: 1, question: "חידת היום הגדול: מה נאחל לך מכל הלב, חוץ מזה שהשמלה תישאר נקייה עד סוף הערב?", answers: ["אושר", "אושר ואהבה", "חיים מאושרים"], surprise: "שתמיד תבחרו זה בזו מחדש, גם בימים של פרפרים וגם בימים של מי שכח לקנות חלב. אוהבים אותך עד השמיים!" },
+      { day: 2, question: "איך קוראים לשני אנשים שהחליטו לצעוד יחד בדרך אחת?", answers: ["זוג", "בני זוג"], surprise: "מהיום יש לך שותף קבוע לפיצוח רהיטים, לחלוקת קינוחים ולחיפוש השלט שאיכשהו שוב נעלם." },
+      { day: 3, question: "מאיזו מתכת יקרה מכינים הרבה טבעות נישואין?", answers: ["זהב"], surprise: "שתהיו זה לזה זהב — וגם תזכרו לפעמים להבריק את הכיור, כי גם הוא אוהב יחס." },
+      { day: 4, question: "מה בוקע מביצה והופך יום רגיל ליום עם ציוצים?", answers: ["אפרוח", "גוזל"], surprise: "שתמיד יהיו בבית קולות של שמחה, צחוק וקצת ציוצים — אבל לא חייבים לאמץ תרנגולת." },
+      { day: 5, question: "איזו ציפור ידועה ביכולת שלה לחקות דיבור?", answers: ["תוכי"], surprise: "שתמיד תדעו להקשיב זה לזו. ואם מישהו חוזר על עצמו — אולי זה פשוט התוכי הפנימי שלו." },
+      { day: 6, question: "מהו הלוויין הטבעי שמאיר לנו בלילה?", answers: ["ירח", "הירח"], surprise: "שתמיד תמצאו רגעים קטנים להתפעל יחד, אפילו באמצע ערב עמוס ובין כל סידורי החתונה." },
+      { day: 7, question: "כמה עונות יש בשנה?", answers: ["ארבע", "4"], surprise: "ארבע עונות בשנה, והמון סיבות לחגוג אתכם. אנחנו כבר שומרים מקום ליד הרחבה!" },
+      { day: 8, question: "מה הטעם של מי הים — מתוק או מלוח?", answers: ["מלוח"], surprise: "שתהיה לכם אהבה עמוקה כמו ים, אבל בלי חול בתוך הנעליים בדרך הביתה." },
+      { day: 9, question: "איזו חיה מייללת 'מיאו' ומתנהגת כאילו הבית שייך לה?", answers: ["חתול", "חתולה"], surprise: "שתמיד יהיה לכם מקום נעים לחזור אליו, עם או בלי חתול שמחליט שהספה שלו." },
+      { day: 10, question: "כמה צלעות יש למשולש?", answers: ["שלוש", "3"], surprise: "שלוש פינות, לב אחד גדול — ושתי משפחות שמתרגשות להיות משפחה אחת." },
+      { day: 11, question: "מה אפשר לתפוס, אבל אי אפשר לזרוק?", answers: ["צינון", "נזלת"], surprise: "שתתפסו רק רגעים יפים, צחוק מתגלגל, ולכל היותר זר פרחים — לא צינון." },
+      { day: 12, question: "למי יש שיניים אבל הוא לא נושך?", answers: ["מסרק"], surprise: "מאחלים לך יום חתונה מושלם, תלתלים שמחזיקים מעמד ואפס מלחמות עם המסרק." },
+      { day: 13, question: "איזו אות מסתתרת בדיוק באמצע המילה 'חתונה'?", answers: ["ו"], surprise: "לפעמים כל הסיפור מסתתר באמצע: החיבוק, המבט והיד שמחזיקה לך את היד." },
+      { day: 14, question: "מה מתווסף בכל יום הולדת, גם אם לא תמיד רוצים לספור?", answers: ["גיל", "שנה"], surprise: "שתצברו שנים של אהבה, טיולים, בדיחות פרטיות וסיפורים שיהיה כיף לספר שוב ושוב." },
+      { day: 15, question: "מה אפשר לשבור בלי לגעת בו?", answers: ["הבטחה", "שתיקה", "שיא"], surprise: "שתשמרו על ההבטחות החשובות, ותשברו יחד שיאים של צחוק, ריקודים ואכילת עוגה." },
+      { day: 16, question: "למי יש צוואר אבל אין ראש?", answers: ["בקבוק"], surprise: "שתמיד יהיה משהו טעים למזוג לחיים — ובקבוק מים ליד רחבת הריקודים, ליתר ביטחון." },
+      { day: 17, question: "למי יש מחוגים אבל הוא לא מוחא כפיים?", answers: ["שעון"], surprise: "הלוואי שהזמן יאט דווקא ברגעים הכי יפים, ויזדרז כשצריך להרכיב ארון ביחד." },
+      { day: 18, question: "מה עולה ויורד, אבל נשאר בדיוק באותו מקום?", answers: ["מדרגות", "גרם מדרגות"], surprise: "שתעלו יחד בכל מדרגה חדשה, תמיד כתף אל כתף — ורצוי עם מעלית כשיש שקיות." },
+      { day: 19, question: "איזה כוכב מאיר לנו בבוקר ושוקע בערב?", answers: ["שמש", "השמש"], surprise: "שתאירו זה לזה גם בימים מעוננים, ותזכרו: גם יום עם כביסה הוא יום שאפשר לצחוק בו." },
+      { day: 20, question: "חידת טריק: באיזה חודש יש 28 ימים?", answers: ["בכל החודשים", "כל החודשים"], surprise: "תשובה חכמה! בחיים המשותפים, תשמרו מקום גם לחידות וגם לתשובות הנכונות — כמעט תמיד." },
+      { day: 21, question: "כמה חודשים יש בשנה?", answers: ["שנים עשר", "12"], surprise: "שנים עשר חודשים בכל שנה, ושתים־עשרה סיבות לחגוג אתכם בכל חודש מחדש." },
+      { day: 22, question: "כמה ימים יש בשבוע?", answers: ["שבעה", "7"], surprise: "שבעה ימים בשבוע לבחור באהבה — ושבעה ימים שבהם אפשר להתווכח מי מכין קפה." },
+      { day: 23, question: "איזה יום בא לפני יום ראשון בלוח השבוע שלנו?", answers: ["שבת"], surprise: "שתהיה לכם שבת רגועה, ארוחות משפחתיות, ומישהו אחר שישטוף את הכלים מדי פעם." },
+      { day: 24, question: "לאיזה כיוון מראה המצפן?", answers: ["צפון"], surprise: "שתמיד תמצאו את הכיוון שלכם, גם בלי וייז — ואחד את השנייה גם בתוך חניון ענקי." },
+      { day: 25, question: "מאיפה מגיע הגשם שמרטיב לנו את המטרייה?", answers: ["עננים", "מהעננים"], surprise: "שתמיד תהיה לכם קשת אחרי הגשם, ומטרייה אחת גדולה מספיק לשניכם." },
+      { day: 26, question: "איזה כלי נגינה מנגנים בקלידים?", answers: ["פסנתר"], surprise: "שתרקדו לצלילי המנגינה שלכם, גם אם הפלייליסט יכלול במקרה את השיר שאבא מבקש." },
+      { day: 27, question: "באיזה צבע בדרך כלל מציירים שלג?", answers: ["לבן"], surprise: "שתמיד יהיה לכם אור בהיר בלב, ורגעים לבנים ונקיים של התחלה חדשה." },
+      { day: 28, question: "מה הדבורה מכינה מפרחים?", answers: ["דבש"], surprise: "שתהיה לכם זוגיות מתוקה מדבש — אבל לא צריך להוסיף דבש לקפה, זו רק ברכה." },
+      { day: 29, question: "איזו חיה נושאת את הבית על הגב ומתקדמת לאט-לאט?", answers: ["חילזון"], surprise: "שתבנו יחד בית חם ונעים בקצב שלכם — בלי לחץ, ובלי לסחוב אותו על הגב." },
+      { day: 30, question: "איזה צליל משמיע שעון ישן בסיפור: טיק־...?", answers: ["טק", "טוק"], surprise: "טיק־טק, עוד יום אל החופה! אנחנו סופרים איתך, אבל מבטיחים לא להציק עם השאלה 'נו, כמה נשאר?'" },
+      { day: 31, question: "מהי האות הראשונה באלף־בית העברי?", answers: ["א", "אלף"], surprise: "כל סיפור יפה מתחיל באות אחת. הסיפור שלכם כבר מתחיל באהבה גדולה ובמשפחה שמריעה מהצד." },
+      { day: 32, question: "כמה הם חצי מעשר?", answers: ["חמש", "5"], surprise: "חמש אצבעות בכל יד, ויש תמיד יד אחת להחזיק — במיוחד כשיש פרפרים בבטן." },
+      { day: 33, question: "כמה גלגלים יש לאופניים רגילים?", answers: ["שניים", "2"], surprise: "שתרכבו יחד באותו כיוון, תעזרו זה לזו בעליות, ותעצרו לקפה בירידות." },
+      { day: 34, question: "מה קורה למים כשהם קופאים?", answers: ["קרח"], surprise: "שתמיד תשמרו על קור רוח כשמשהו משתבש — ותשאירו את הקרח לכוסות השתייה." },
+      { day: 35, question: "איזה מאכל אוכלים בפסח במקום לחם?", answers: ["מצה"], surprise: "שתמיד תדעו ליהנות מהחגיגה שלכם — עם מצה או עם עוגה, העיקר ביחד." },
+      { day: 36, question: "איזו חיה מפורסמת בנאמנות שלה ונובחת 'הב הב'?", answers: ["כלב", "כלבה"], surprise: "שתהיו תמיד הצוות הכי נאמן זה של זו — עם או בלי כלב שמקבל את כל תשומת הלב." },
+      { day: 37, question: "איזה חודש מגיע אחרי אדר בלוח העברי?", answers: ["ניסן"], surprise: "שתבוא עליכם התחלה חדשה ומלאה בפריחה, שמחה וחירות להיות בדיוק מי שאתם." },
+      { day: 38, question: "מהו ההפך מלילה?", answers: ["יום"], surprise: "שתאהבו זה את זו ביום ובלילה, וגם בבוקר כשעוד לא הספקתם לשתות קפה." },
+      { day: 39, question: "כמה דקות יש בשעה אחת?", answers: ["שישים", "60"], surprise: "שישים דקות בשעה, אבל רגע אחד איתכם מספיק כדי להזכיר לכולנו כמה אהבה יש במשפחה." },
+      { day: 40, question: "כמה קודקודים יש לכוכב מחומש מצויר?", answers: ["חמישה", "5"], surprise: "שתזרחו כמו כוכבים, אבל תזכרו שהכוכבים האמיתיים שלכם הם כל האנשים שסביבכם." },
+      { day: 41, question: "כמה ברכות נאמרות בשבע ברכות?", answers: ["שבע", "7"], surprise: "שבע ברכות, אינספור איחולים, ומשפחה שלמה שמוסיפה עוד אחד: שתמיד תהיו מאושרים." },
+      { day: 42, question: "איך נקרא המסמך המסורתי שניתן לכלה בחופה?", answers: ["כתובה"], surprise: "שתכתבו יחד את הסיפור שלכם, פרק אחרי פרק — בלי לחץ, ובלי צורך בעורך לשוני." },
+      { day: 43, question: "מי עורך בדרך כלל את טקס החופה בחתונה יהודית?", answers: ["רב", "הרב"], surprise: "רגע אחד מתחת לחופה, התחלה אחת גדולה, ואהבה שלמה שמקיפה אתכם מכל הצדדים." },
+      { day: 44, question: "איזה קינוח חגיגי מחכים לו במיוחד בחתונות?", answers: ["עוגה", "עוגת חתונה"], surprise: "מאחלים לכם חיים מתוקים, ושמישהו ישמור לכם פרוסה לפני שהאורחים מגיעים לקינוחים." },
+      { day: 45, question: "איך נקרא הכיסוי העדין שלובשת לפעמים הכלה על הראש או הפנים?", answers: ["הינומה"], surprise: "שתרגישי הכי את בעולם, עם הינומה או בלעדיה — כי הזוהר האמיתי כבר שלך." },
+      { day: 46, question: "מה נהוג לשלב בזר כלה כדי שיהיה צבעוני וריחני?", answers: ["פרחים", "פרח"], surprise: "שתמיד יהיו סביבך פרחים, אנשים טובים וסיבות קטנות לחייך — ולא רק ביום החתונה." },
+      { day: 47, question: "איזה צבע מזוהה עם שמלת כלה מסורתית?", answers: ["לבן"], surprise: "לא משנה מה תלבשי, את תהיי הכי יפה — אבל אל תספרי לשמלה, היא עלולה להתרגש." },
+      { day: 48, question: "איזו צורה יש לטבעת נישואין פשוטה?", answers: ["עיגול", "עגולה", "מעגל"], surprise: "עיגול בלי התחלה ובלי סוף — כמו החיבוקים שלנו, רק בלי לשחרר אותך באמצע הדרך אל החופה." },
+      { day: 49, question: "מה נהוג לשבור מתחת לחופה כסמל לסיום הטקס?", answers: ["כוס"], surprise: "גם כשהכוס נשברת, האהבה רק מתחילה. שתמיד תאספו יחד את השברים — ותזמינו מישהו אחר לטאטא." },
+      { day: 50, question: "מה אומרים בעברית כשמרימים כוסית לחגיגה?", answers: ["חיים", "לחיים"], surprise: "המסע מתחיל! כל יום מקרב אותך לחופה, ואנחנו כבר אוהבים את הזיכרונות שעוד ניצור יחד. נשיקה גדולה מהמשפחה." }
+    ];
+
+    const STORAGE_KEY = "masa-el-hupa-progress-v1";
+    const doorGrid = document.getElementById("doorGrid");
+    const dialog = document.getElementById("dayDialog");
+    const answerForm = document.getElementById("answerForm");
+    const answerInput = document.getElementById("answerInput");
+    const answerError = document.getElementById("answerError");
+    const surprise = document.getElementById("surprise");
+    const surpriseText = document.getElementById("surpriseText");
+    const storageNotice = document.getElementById("storageNotice");
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.querySelector('[role="progressbar"]');
+    let activeDay = null;
+    let progress = { startDate: todayString(), completed: [] };
+    let storageAvailable = true;
+
+    function todayString() {
+      const now = new Date();
+      return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0")].join("-");
+    }
+
+    function dayIndex(dateString) {
+      const [year, month, day] = dateString.split("-").map(Number);
+      return Math.floor(Date.UTC(year, month - 1, day) / 86400000);
+    }
+
+    function showStorageError(message) {
+      storageNotice.textContent = message;
+      storageNotice.hidden = false;
+    }
+
+    function loadProgress() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+          return;
+        }
+        const parsed = JSON.parse(saved);
+        if (
+          !parsed ||
+          typeof parsed.startDate !== "string" ||
+          !/^\d{4}-\d{2}-\d{2}$/.test(parsed.startDate) ||
+          !Array.isArray(parsed.completed) ||
+          parsed.completed.some(day => !Number.isInteger(day) || day < 1 || day > 50)
+        ) {
+          throw new Error("נתוני המשחק השמורים אינם תקינים.");
+        }
+        progress = { startDate: parsed.startDate, completed: [...new Set(parsed.completed)] };
+      } catch (error) {
+        storageAvailable = false;
+        console.error("לא ניתן לטעון או לשמור את התקדמות המשחק.", error);
+        showStorageError("לא הצלחנו לטעון או לשמור את ההתקדמות בדפדפן. אפשר להמשיך לשחק, אבל ההתקדמות לא תישמר לאחר סגירת העמוד.");
+      }
+    }
+
+    function saveProgress() {
+      if (!storageAvailable) return false;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        return true;
+      } catch (error) {
+        storageAvailable = false;
+        console.error("לא ניתן לשמור את התקדמות המשחק.", error);
+        showStorageError("הדפדפן לא הצליח לשמור את ההתקדמות. אפשר להמשיך לשחק בעמוד הזה, אבל השינויים הבאים לא יישמרו.");
+        return false;
+      }
+    }
+
+    function availableThrough() {
+      const elapsed = Math.max(0, dayIndex(todayString()) - dayIndex(progress.startDate));
+      return Math.max(1, 50 - Math.min(elapsed, 49));
+    }
+
+    function renderDoors() {
+      doorGrid.replaceChildren();
+      const unlockedFrom = availableThrough();
+      for (let number = 50; number >= 1; number--) {
+        const button = document.createElement("button");
+        const isCompleted = progress.completed.includes(number);
+        const isAvailable = number >= unlockedFrom;
+        button.type = "button";
+        button.className = "door" + (isCompleted ? " completed" : isAvailable ? " available" : "");
+        button.disabled = !isAvailable;
+        button.setAttribute("aria-label", isCompleted
+          ? `יום ${number}, נפתח והושלם`
+          : isAvailable ? `יום ${number}, פתוח` : `יום ${number}, נעול`);
+        button.innerHTML = `<span class="door-number">${number}</span><span class="door-label">${isCompleted ? "הפתעה נפתחה" : isAvailable ? "הדלת מחכה לך" : "עוד לא הגיע היום"}</span><span class="door-mark" aria-hidden="true">${isCompleted ? "♡" : isAvailable ? "✦" : "🔒"}</span>`;
+        if (isAvailable) button.addEventListener("click", () => openDay(number));
+        doorGrid.append(button);
+      }
+
+      const completedCount = progress.completed.length;
+      progressText.textContent = `${completedCount} מתוך 50`;
+      progressFill.style.width = `${completedCount * 2}%`;
+      progressBar.setAttribute("aria-valuenow", String(completedCount));
+    }
+
+    function openDay(number) {
+      activeDay = days.find(item => item.day === number);
+      if (!activeDay) return;
+      document.getElementById("dayKicker").textContent = `יום ${number} מתוך 50`;
+      document.getElementById("modalTitle").textContent = progress.completed.includes(number) ? "איזה כיף שחזרת!" : "האתגר היומי";
+      document.getElementById("challengeText").textContent = activeDay.question;
+      answerError.textContent = "";
+      answerInput.value = "";
+      const isCompleted = progress.completed.includes(number);
+      answerForm.hidden = isCompleted;
+      surprise.hidden = !isCompleted;
+      surpriseText.textContent = isCompleted ? activeDay.surprise : "";
+      dialog.showModal();
+      if (!isCompleted) answerInput.focus();
+    }
+
+    function normalizeAnswer(value) {
+      return value.trim().toLocaleLowerCase("he").replace(/[\s.,!?״׳'’־-]/g, "");
+    }
+
+    answerForm.addEventListener("submit", event => {
+      event.preventDefault();
+      if (!activeDay) return;
+      const answer = normalizeAnswer(answerInput.value);
+      const isCorrect = activeDay.answers.some(candidate => normalizeAnswer(candidate) === answer);
+      if (!isCorrect) {
+        answerError.textContent = "כמעט! נסי שוב — אנחנו מאמינים בך (וגם בעזרה של המשפחה).";
+        answerInput.focus();
+        return;
+      }
+
+      if (!progress.completed.includes(activeDay.day)) {
+        progress.completed.push(activeDay.day);
+        progress.completed.sort((a, b) => a - b);
+        saveProgress();
+      }
+      answerForm.hidden = true;
+      answerError.textContent = "";
+      surpriseText.textContent = activeDay.surprise;
+      surprise.hidden = false;
+      document.getElementById("modalTitle").textContent = "איזה כיף, הצלחת!";
+      renderDoors();
+    });
+
+    document.getElementById("closeDialog").addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", event => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    document.getElementById("resetProgress").addEventListener("click", () => {
+      if (!window.confirm("בטוחה שתרצי לאפס את כל הדלתות ולהתחיל מחדש?")) return;
+      progress = { startDate: todayString(), completed: [] };
+      saveProgress();
+      renderDoors();
+      if (dialog.open) dialog.close();
+    });
+
+    loadProgress();
+    renderDoors();
+  </script>
+</body>
+</html>
