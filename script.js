@@ -24,7 +24,6 @@ const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const progressBar = document.querySelector('[role="progressbar"]');
 const countdownNumber = document.getElementById("countdownNumber");
-const previewDateInput = document.getElementById("previewDate");
 let activeDay = null;
 let progress = { startDate: todayString(), completed: [] };
 let storageAvailable = true;
@@ -38,17 +37,6 @@ function todayString() {
 function dayIndex(dateString) {
   const [year, month, day] = dateString.split("-").map(Number);
   return Math.floor(Date.UTC(year, month - 1, day) / 86400000);
-}
-
-function shiftDate(dateString, daysToShift) {
-  const date = new Date(`${dateString}T12:00:00`);
-  date.setDate(date.getDate() + daysToShift);
-  return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
-}
-
-function selectedDate() {
-  const value = previewDateInput.value;
-  return /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(dayIndex(value)) ? value : todayString();
 }
 
 function showStorageError(message) {
@@ -96,7 +84,7 @@ function saveProgress() {
 }
 
 function elapsedDays() {
-  return Math.max(0, dayIndex(selectedDate()) - dayIndex(progress.startDate));
+  return Math.max(0, dayIndex(todayString()) - dayIndex(progress.startDate));
 }
 
 function availableThrough() {
@@ -242,24 +230,6 @@ document.getElementById("resetProgress").addEventListener("click", () => {
   if (dialog.open) dialog.close();
 });
 
-previewDateInput.value = todayString();
-previewDateInput.addEventListener("change", () => {
-  renderCountdown();
-  renderDoors();
-});
-
-document.getElementById("previewNextDay").addEventListener("click", () => {
-  previewDateInput.value = shiftDate(selectedDate(), 1);
-  renderCountdown();
-  renderDoors();
-});
-
-document.getElementById("resetPreview").addEventListener("click", () => {
-  previewDateInput.value = todayString();
-  renderCountdown();
-  renderDoors();
-});
-
 loadProgress();
 renderCountdown();
 renderDoors();
@@ -267,7 +237,6 @@ renderDoors();
 window.setInterval(() => {
   const liveDate = todayString();
   if (liveDate === lastLiveDate) return;
-  if (previewDateInput.value === lastLiveDate) previewDateInput.value = liveDate;
   lastLiveDate = liveDate;
   renderCountdown();
   renderDoors();

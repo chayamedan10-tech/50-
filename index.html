@@ -158,45 +158,6 @@
       text-shadow: 1px 1px 0 #fff8e8, 2px 3px 0 rgb(35 66 90 / 15%);
     }
 
-    .creator-tools {
-      width: fit-content;
-      max-width: 100%;
-      margin: 13px auto 0;
-      color: #625a4f;
-      font-size: .8rem;
-      text-align: center;
-    }
-
-    .creator-tools summary {
-      cursor: pointer;
-      opacity: .63;
-    }
-
-    .creator-tools summary:hover, .creator-tools summary:focus-visible { opacity: 1; }
-
-    .creator-controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      padding: 9px 11px;
-      border: 1px solid var(--gold-light);
-      border-radius: 12px;
-      background: rgb(250 243 227 / 92%);
-    }
-
-    .creator-controls input, .creator-controls button {
-      min-height: 34px;
-      padding: 5px 9px;
-      border: 1px solid #c9b783;
-      border-radius: 8px;
-      background: #fffaf0;
-      color: var(--blue);
-    }
-
-    .creator-controls button { cursor: pointer; }
-
     .progress-wrap {
       display: flex;
       align-items: center;
@@ -668,16 +629,6 @@
         <p class="with-us" dir="ltr">WITH US</p>
       </div>
     </header>
-
-    <details class="creator-tools">
-      <summary>כלי בדיקה ליוצרת</summary>
-      <div class="creator-controls" dir="rtl">
-        <label for="previewDate">תאריך לתצוגה:</label>
-        <input id="previewDate" type="date">
-        <button id="previewNextDay" type="button">הצגת היום הבא</button>
-        <button id="resetPreview" type="button">חזרה להיום</button>
-      </div>
-    </details>
 
     <div id="storageNotice" class="notice" role="alert" hidden></div>
 
